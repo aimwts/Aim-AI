@@ -6,6 +6,7 @@ import CoursePlayer from './pages/CoursePlayer';
 import CourseDetails from './pages/CourseDetails';
 import Courses from './pages/Courses';
 import Settings from './pages/Settings';
+import SetupGuide from './pages/SetupGuide';
 import Auth from './pages/Auth';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { getUserProgress } from './services/progressService';
@@ -66,9 +67,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         <div className="p-4 border-t border-slate-100">
             {isMock && (
-                <div className="mb-4 px-3 py-2 bg-amber-50 text-amber-700 text-xs rounded border border-amber-100">
-                    Using Mock Data
-                </div>
+                <Link to="/setup" className="block mb-4 px-3 py-2 bg-amber-50 text-amber-700 text-xs rounded border border-amber-100 hover:bg-amber-100 transition text-center font-medium">
+                    Using Mock Data (Setup)
+                </Link>
             )}
             <button 
                 onClick={signOut}
@@ -153,6 +154,7 @@ const AuthenticatedApp: React.FC = () => {
                 <Route path="/" element={<Dashboard progress={progress} />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/setup" element={<SetupGuide />} />
                 <Route path="/course-details/:courseId" element={<CourseDetails />} />
                 <Route path="/course/:courseId" element={<CoursePlayer progress={progress} onProgressUpdate={() => getUserProgress(user.id).then(setProgress)} />} />
                 <Route path="*" element={<div className="p-8 text-center text-slate-500">Page under construction</div>} />

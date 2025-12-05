@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Bell, Lock, Mail, Shield } from 'lucide-react';
+import { User, Bell, Database, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Settings: React.FC = () => {
   const { user, isMock } = useAuth();
@@ -55,6 +56,39 @@ const Settings: React.FC = () => {
                         </div>
                     ))}
                 </div>
+            </section>
+
+            <hr className="border-slate-100" />
+
+            <section>
+                <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                    <Database className="w-5 h-5 text-indigo-500" /> Database Connection
+                </h3>
+                
+                {isMock ? (
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-4">
+                        <AlertTriangle className="w-6 h-6 text-amber-500 shrink-0" />
+                        <div className="flex-1">
+                            <h4 className="font-bold text-amber-900">Not Connected to Supabase</h4>
+                            <p className="text-sm text-amber-800 mt-1 mb-3">
+                                You are currently in <strong>Demo Mode</strong>. Data will strictly be saved to your local browser storage and will not sync across devices.
+                            </p>
+                            <Link to="/setup" className="inline-flex items-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition">
+                                Connect Database
+                            </Link>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-4">
+                        <CheckCircle className="w-6 h-6 text-emerald-500" />
+                        <div>
+                            <h4 className="font-bold text-emerald-900">Connected Successfully</h4>
+                            <p className="text-sm text-emerald-700">
+                                Your account is synced with Supabase. All progress is saved to the cloud.
+                            </p>
+                        </div>
+                    </div>
+                )}
             </section>
         </div>
       </div>
