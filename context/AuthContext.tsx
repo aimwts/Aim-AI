@@ -7,6 +7,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  loginAsGuest: () => void;
   isMock: boolean;
 }
 
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: true,
   signOut: async () => {},
+  loginAsGuest: () => {},
   isMock: false,
 });
 
@@ -72,8 +74,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (supabase) await supabase.auth.signOut();
   };
 
+  const loginAsGuest = () => {
+    setIsMock(true);
+    setLoading(true);
+    setTimeout(() => {
+        const guestUser: any = {
+            id: 'guest-user-' + Math.random().toString(36).substr(2, 9),
+            email: 'guest@aim-ai.com',
+            user_metadata: { full_name: 'Guest Student' }
+        };
+        setUser(guestUser);
+        setSession({ user: guestUser, access_token: 'mock-guest-token' } as Session);
+        setLoading(false);
+    }, 800);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signOut, isMock }}>
+    <AuthContext.Provider value={{ user, session, loading, signOut, loginAsGuest, isMock }}>
       {children}
     </AuthContext.Provider>
   );
