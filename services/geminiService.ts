@@ -1,6 +1,14 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Lazy initialization to prevent crashing if environment variables are missing on load
+const getAIClient = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.warn("Gemini API Key is missing. AI features will be disabled.");
+    return null;
+  }
+  return new GoogleGenAI({ apiKey });
+};
 
 export const getGeminiTutorResponse = async (
   history: { role: string; text: string }[],
@@ -8,6 +16,15 @@ export const getGeminiTutorResponse = async (
   userMessage: string
 ): Promise<{ text: string; groundingUrls: { title: string; uri: string; source: 'map' | 'web' }[] }> => {
   try {
+    const ai = getAIClient();
+    
+    if (!ai) {
+      return {
+        text: "I'm currently offline because my API key is missing. Please check the application settings.",
+        groundingUrls: []
+      };
+    }
+
     const model = 'gemini-2.5-flash';
     
     // Construct a context-aware system instruction
